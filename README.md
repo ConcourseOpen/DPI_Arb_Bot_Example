@@ -32,6 +32,8 @@ To Run:
 
 ## DPI ARBITRAGE BOT SMART CONTRACT DISCLAIMER
 1.) The Smart Contract is UNAUDITTED Please review code
+
 2.) It is built for the DeFi Pulse Index but can be used for other products
+
 3.) It uses AAVE for Flashlaons. However you can utilize any flashloan provider. 
 
