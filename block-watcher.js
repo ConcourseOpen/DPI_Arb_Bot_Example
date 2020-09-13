@@ -160,3 +160,4 @@ async function listen(web3) {
 }
 
 module.exports = _connectListener();
+
