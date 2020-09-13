@@ -1,3 +1,7 @@
+## DFP INDEX ARBITRAGE BOT Explained
+If the weights of the assets included in the index become miss aligned with the original index weights described in our methodology there is an opportunity to arbitriage the index. This arbitrage bot is built to watch for these miss alignments and issue(buy) or redeem(sell) the underlying assets of the index to keep the Index in line with expected weights of each token. 
+
+
 ## DFP INDEX ARBITRAGE BOT
 
 Add a .env file to the root of the directory containing:
@@ -23,6 +27,8 @@ To Run:
 
 `node server.js`
 
-
-We have also included the smart contract that is used to execute this arb opportunity. 
-It is ready to deploy but feel free to optimize it for gas cost or higher profitability. It currently uses AAVE for flash loans. 
+## DFP INDEX ARBITRAGE BOT SMART CONTRACT DISCLAIMER
+1.) The Smart Contract is UNAUDITTED Please review code
+2.) It is built for the DeFi Pulse Index but can be used for other products
+3.) It uses AAVE for flashlaons and 
+4.) The SC was not optimize for higher profitability but to complete the arb. Optimizations can be made to increase profitablity. 
