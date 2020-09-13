@@ -22,3 +22,7 @@ To Run:
 `npm install`
 
 `node server.js`
+
+
+We have also included the smart contract that is used to execute this arb opportunity. 
+It is ready to deploy but feel free to optimize it for gas cost or higher profitability. It currently uses AAVE for flash loans. 
