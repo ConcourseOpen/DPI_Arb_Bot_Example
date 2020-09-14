@@ -35,5 +35,5 @@ To Run:
 
 2.) It is built for the DeFi Pulse Index but can be used for other products.
 
-3.) It uses AAVE for Flashlaons. However you can utilize any flashloan provider. 
+3.) It uses AAVE for flash loans. However, you can utilize any flash-loan provider. 
 
