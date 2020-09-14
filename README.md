@@ -1,5 +1,5 @@
 ## DeFi Pulse Index(DPI) ARBITRAGE BOT Explained
-If the weights of the assets included in the index become misaligned with the original index weights described in our methodology, there is an opportunity to arbitriage the index. 
+If the weights of the assets included in the index become misaligned with the original index weights described in our methodology, there is an opportunity to arbitrage the index. 
 
 The arb bot utilizes flash loans to maintain the index NAV. The use of flash loans allows everyone access and can scale with the size of the arbitrage opporunity. When executed, the arb bot will assess whether the index is outside of the intended +/-5% net asset value (NAV). If it is outside this range, the bot will programatically issue (buy) or redeem (sell) the appropriate underlying assets of the index to keep the index in line with expected NAV and index weights. The current version is optimized to maintain the index weights, not for profit. 
 
