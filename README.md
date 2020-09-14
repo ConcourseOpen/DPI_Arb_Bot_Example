@@ -1,7 +1,7 @@
 ## DeFi Pulse Index(DPI) ARBITRAGE BOT Explained
-If the weights of the assets included in the index become miss aligned with the original index weights described in our methodology there is an opportunity to arbitriage the index. 
+If the weights of the assets included in the index become misaligned with the original index weights described in our methodology, there is an opportunity to arbitriage the index. 
 
-The arb bot utilize flashloans to maintain the index NAV. The use of flash loans allow everyone access and can scale with the size of the arbitrage opporunity.  When executed the arb bot will access if the index is outside of the intended +/-5% net asset value(NAV). If it is outside this ban the bot will issue(buy) or redeem(sell) the appropriate underlying assets of the index to keep the index in line with expected NAV and index weights. The current version is optimized to maintain the index weights not for profit. 
+The arb bot utilizes flash loans to maintain the index NAV. The use of flash loans allows everyone access and can scale with the size of the arbitrage opporunity. When executed, the arb bot will assess whether the index is outside of the intended +/-5% net asset value (NAV). If it is outside this range, the bot will programatically issue (buy) or redeem (sell) the appropriate underlying assets of the index to keep the index in line with expected NAV and index weights. The current version is optimized to maintain the index weights, not for profit. 
 
 
 
@@ -31,9 +31,9 @@ To Run:
 `node server.js`
 
 ## DPI ARBITRAGE BOT SMART CONTRACT DISCLAIMER
-1.) The Smart Contract is UNAUDITTED Please review code
+1.) Use at your own risk. The smart contract is currently UNAUDITED and provided as-is in the spirit of transparency and decentralization. So make sure you review and understand the code, and please only use the arb bot if you appreciate the risks and uncertainty inherent in transacting with value on Ethereum, including the volatility of gas and asset prices and the possibility (and implications) of competition for block space.
 
-2.) It is built for the DeFi Pulse Index but can be used for other products
+2.) It is built for the DeFi Pulse Index but can be used for other products.
 
 3.) It uses AAVE for Flashlaons. However you can utilize any flashloan provider. 
 
