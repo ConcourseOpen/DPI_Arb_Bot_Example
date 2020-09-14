@@ -10,13 +10,13 @@
   "license": "ISC",
   "dependencies": {
     "@uniswap/sdk": "^3.0.3-beta.1",
+    "axios": "^0.20.0",
     "body-parser": "^1.19.0",
     "colors": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "ethers": "^5.0.12",
     "express": "^4.17.1",
-    "truffle-hdwallet-provider": "^1.0.17",
     "web3": "^1.2.11"
   }
 }

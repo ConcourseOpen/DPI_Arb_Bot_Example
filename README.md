@@ -14,9 +14,11 @@ INFURA_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  //your infura key
 
 PORT=3032  //or whatever port you want to run on
 
-DFP_INDEX_ADDRESS=0x9F295d05bAeE0E95F52aC1db0C2bDc26A226e4BB  //address of the DFP Index token
+DPD_KEY=xxx......  //Defipulse Data Api key to fetch gas prices from ethgasstation.info
 
-DFP_TRADE_ADDRESS=0x690317De764D91558A3e23891A5CD843396471B6  //address of the DFP Arbitrage contract
+DFP_INDEX_ADDRESS=0x1494CA1F11D487c2bBe4543E90080AeBa4BA3C2b  //address of the DFP Index token
+
+DFP_TRADE_ADDRESS=0x29656f2367cf5317915bd61c51ba2b203e975e11  //address of the DFP Arbitrage contract
 
 PRICE_THRESHOLD=5  //price percentage difference threshold to trigger arbitrage
 

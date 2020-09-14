@@ -1,8 +1,7 @@
 const Web3Connection = require("./web3-connection");
 const Big = require("bignumber.js");
 const ethers = require("ethers");
-const Web3 = require("web3");
-const HDWalletProvider = require("truffle-hdwallet-provider");
+const axios = require("axios");
 const SetTokenAbi = require("./abis/SetToken.json");
 const ERC20Abi = require("./abis/erc20.json");
 const DFPIndexTradeAbi = require("./abis/DFPIndexTrade.json");
@@ -17,6 +16,7 @@ const {
   TokenAmount,
   TradeType,
 } = require("@uniswap/sdk");
+const { resolveProperties } = require("ethers/lib/utils");
 
 let lastArbitrageDate;
 async function checkPositions(web3) {
@@ -72,60 +72,82 @@ async function checkPositions(web3) {
 
     console.log(`DFP Index Price: ${route.midPrice.toSignificant(18)}`);
     console.log(`Percentage Price Difference: ${pctDiff.toFixed(18)}`);
-
-    if (pctDiff >= process.env.PRICE_THRESHOLD) {
-
-        if (lastArbitrageDate && checkDay(lastArbitrageDate, new Date())) {
-          console.log('Already arbed today');
-        } else {
-          const newPrice = ethSum.div(Math.pow(10,9))
-          const arbed = await triggerArbitrage(newPrice.toFixed(0));
-          if (arbed) {
-            lastArbitrageDate = new Date();
-            console.log('ARBITRAGE!')
-          }
+    if (pctDiff.gt(process.env.PRICE_THRESHOLD)) {
+      if (lastArbitrageDate && checkDay(lastArbitrageDate, new Date())) {
+        console.log("Already arbed today");
+      } else {
+        const newPrice = ethSum.div(Math.pow(10, 9));
+        const arbed = await triggerArbitrage(newPrice.toFixed(0));
+        console.log(arbed);
+        if (arbed) {
+          lastArbitrageDate = new Date();
+          console.log("ARBITRAGE!");
         }
+      }
     }
   }
 }
 
 function checkDay(date1, date2) {
-  return date1.getFullYear() === date2.getFullYear() &&
+  return (
+    date1.getFullYear() === date2.getFullYear() &&
     date1.getMonth() === date2.getMonth() &&
-    date1.getDate() === date2.getDate();
+    date1.getDate() === date2.getDate()
+  );
 }
 
 let txSent = false;
 async function triggerArbitrage(newPrice) {
   if (!txSent) {
-    console.log(`New Price: ${newPrice}`)
-    const provider = new HDWalletProvider(
-      process.env.MNEMONIC,
-      `https://mainnet.infura.io/ws/v3/${process.env.INFURA_KEY}`
+    console.log(`New Price: ${newPrice}`);
+    const provider = new ethers.providers.InfuraProvider(
+      "mainnet",
+      process.env.INFURA_KEY
+    );
+    const signer = ethers.Wallet.fromMnemonic(process.env.MNEMONIC).connect(
+      provider
     );
 
-    let web3 = new Web3(provider);
-    let DFPIndexTrade = new web3.eth.Contract(
+    let DFPIndexTrade = new ethers.Contract(
+      process.env.DFP_TRADE_ADDRESS,
       DFPIndexTradeAbi,
-      process.env.DFP_TRADE_ADDRESS
+      signer
     );
+    txSent = true;
+    try {
+      let gasPrice = await axios.get(
+        `https://data-api.defipulse.com/api/v1/egs/api/ethgasAPI.json?api-key=${process.env.DPD_KEY}`
+      );
+      gasPrice = Number(gasPrice.data.fastest) / 10;
+      let gasLimit = await DFPIndexTrade.estimateGas.initiateArbitrage(
+        process.env.DFP_INDEX_ADDRESS,
+        newPrice,
+        { value: ethers.utils.parseEther('1.0') }
+      );
 
-    DFPIndexTrade.methods
-      .initiateArbitrage(process.env.DFP_INDEX_ADDRESS, newPrice)
-      .on("transactionHash", (hash) => {
-        txSent = true;
-        console.log(`Mining Arbitrage Tx: ${hash}...`);
-      })
-      .on("confirmation", (confirmation, receipt) => {
-        txSent = false;
-        console.log("Tx Confirmed!", confirmation);
-        return true;
-      })
-      .on("error", (error) => {
-        txSent = false;
-        console.log(`Error submitting Arbitrage Tx: ${error}`);
-        return false;
-      });
+      let profit = await DFPIndexTrade.callStatic.initiateArbitrage(
+        process.env.DFP_INDEX_ADDRESS,
+        newPrice,
+        { value: ethers.utils.parseEther('1.0') }
+      );
+      console.log(`Expected Return Amount: ${profit.toString()}`);
+      console.log('Sending Arbitrage tx...');
+      let tx = await DFPIndexTrade.initiateArbitrage(
+        process.env.DFP_INDEX_ADDRESS,
+        newPrice,
+        {
+          value: ethers.utils.parseEther('1.0'),
+          gasLimit,
+          gasPrice: ethers.utils.parseUnits(gasPrice, "gwei"),
+        }
+      );
+      txSent = false;
+      return true;
+    } catch (e) {
+      console.log(e);
+      txSent = false;
+      return false;
+    }
   } else {
     return false;
   }
@@ -140,9 +162,7 @@ const _connectListener = () => {
 async function listen(web3) {
   console.log("Starting Block Watcher...");
   await checkPositions(web3);
-  console.log(
-    `finished getting data.....\n\n`
-  );
+  console.log(`finished getting data.....\n\n`);
   web3.eth.subscribe("newBlockHeaders", async (error, result) => {
     if (error) {
       console.error(new Error(error));
@@ -160,4 +180,3 @@ async function listen(web3) {
 }
 
 module.exports = _connectListener();
-
