@@ -31,7 +31,7 @@ To Run:
 `node server.js`
 
 ## DPI ARBITRAGE BOT SMART CONTRACT DISCLAIMER
-1.) Use at your own risk. The smart contract is currently UNAUDITED and provided as-is in the spirit of transparency and decentralization. So make sure you review and understand the code, and please only use the arb bot if you appreciate the risks and uncertainty inherent in transacting with value on Ethereum, including the volatility of gas and asset prices and the possibility (and implications) of competition for block space.
+1.) Use at your own risk; no particular outcome is guaranteed. The smart contract is currently UNAUDITED and provided as-is in the spirit of transparency and decentralization. So make sure you review and understand the code, and please only use the arb bot if you appreciate the risks and uncertainty inherent in transacting with value on Ethereum, including the volatility of gas and asset prices and the possibility (and implications) of competition for block space.
 
 2.) It is built for the DeFi Pulse Index but can be used for other products.
 
