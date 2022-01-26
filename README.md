@@ -32,6 +32,20 @@ To Run:
 
 `node server.js`
 
+You should see:
+```
+Component ETH Value: 0.07154760509663481
+DFP Index Price: 0.0735540174582905168
+Percentage Price Difference: 2.765527119996483701
+finished getting data for block: 14084065 .....
+
+
+Component ETH Value: 0.07154760509663481
+DFP Index Price: 0.0735540174582905168
+Percentage Price Difference: 2.765527119996483701
+finished getting data for block: 14084066 .....
+```
+
 ## DPI ARBITRAGE BOT SMART CONTRACT DISCLAIMER
 1.) Use at your own risk; no particular outcome is guaranteed. The smart contract is currently UNAUDITED and provided as-is in the spirit of transparency and decentralization. So make sure you review and understand the code, and please only use the arb bot if you appreciate the risks and uncertainty inherent in transacting with value on Ethereum, including the volatility of gas and asset prices and the possibility (and implications) of competition for block space.
 

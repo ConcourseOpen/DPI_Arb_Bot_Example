@@ -4,6 +4,7 @@ const ethers = require("ethers");
 const axios = require("axios");
 const SetTokenAbi = require("./abis/SetToken.json");
 const ERC20Abi = require("./abis/erc20.json");
+const IUniswapV2PairAbi = require("./abis/IUniswapV2Pair.json")
 const DFPIndexTradeAbi = require("./abis/DFPIndexTrade.json");
 
 const {
@@ -17,6 +18,7 @@ const {
   TradeType,
 } = require("@uniswap/sdk");
 const { resolveProperties } = require("ethers/lib/utils");
+const { Pair } = require("@uniswap/sdk");
 
 let lastArbitrageDate;
 async function checkPositions(web3) {
@@ -35,13 +37,25 @@ async function checkPositions(web3) {
     for (let position of positions) {
       let erc20 = new web3.eth.Contract(ERC20Abi, position.component);
       let decimals = await erc20.methods.decimals().call();
-
+      
       let uniToken = new Token(ChainId.MAINNET, position.component, decimals);
-      let pair = await Fetcher.fetchPairData(
-        uniToken,
-        WETH[uniToken.chainId],
-        provider
-      );
+      let pair ;
+      if (position.component === "0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202") {
+        // uniswap sdk fetcher returns the wrong address for the KNC-ETH pool...
+        // so we have to construct the pair by hand, using the correct pool address
+        const pool = new web3.eth.Contract(IUniswapV2PairAbi, "0xf49C43Ae0fAf37217bDcB00DF478cF793eDd6687")
+        const reserves = await pool.methods.getReserves().call();
+        pair = new Pair(
+          new TokenAmount(WETH[ChainId.MAINNET], reserves.reserve0),
+          new TokenAmount(uniToken, reserves.reserve1)
+        )
+      } else {
+        pair = await Fetcher.fetchPairData(
+          uniToken,
+          WETH[uniToken.chainId],
+          provider
+        );
+      }
 
       let route = new Route([pair], uniToken);
       let returnAmount = new Big(position.unit).times(
@@ -49,7 +63,7 @@ async function checkPositions(web3) {
       );
       ethSum = ethSum.plus(returnAmount);
     }
-    console.log(`Component ETH Value: ${ethSum.toFixed(0)}`);
+    console.log(`Component ETH Value: ${ethSum.toFixed(0)/1e18}`);
     let dfpIndexToken = new Token(
       ChainId.MAINNET,
       process.env.DFP_INDEX_ADDRESS,
